@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B5EF6C31E79A34B000EBDF2"
-               BuildableName = "PyRun.bundle"
+               BuildableName = "PyRun.codaplugin"
                BlueprintName = "PyRun"
                ReferencedContainer = "container:PyRun.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B5EF6C31E79A34B000EBDF2"
-            BuildableName = "PyRun.bundle"
+            BuildableName = "PyRun.codaplugin"
             BlueprintName = "PyRun"
             ReferencedContainer = "container:PyRun.xcodeproj">
          </BuildableReference>
@@ -69,7 +69,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B5EF6C31E79A34B000EBDF2"
-            BuildableName = "PyRun.bundle"
+            BuildableName = "PyRun.codaplugin"
             BlueprintName = "PyRun"
             ReferencedContainer = "container:PyRun.xcodeproj">
          </BuildableReference>

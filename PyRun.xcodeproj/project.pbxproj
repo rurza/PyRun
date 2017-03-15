@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5B5EF6D01E79A45C000EBDF2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B5EF6CF1E79A45C000EBDF2 /* Cocoa.framework */; };
 		5B6B420B1E79A56E006E4203 /* PyRunPlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6B420A1E79A56E006E4203 /* PyRunPlugIn.m */; };
+		5BBC20FF1E79D7580081FB42 /* PyRunSettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BBC20FE1E79D7580081FB42 /* PyRunSettings.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +19,7 @@
 		5B5EF6CF1E79A45C000EBDF2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5B6B42091E79A56E006E4203 /* PyRunPlugIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PyRunPlugIn.h; sourceTree = "<group>"; };
 		5B6B420A1E79A56E006E4203 /* PyRunPlugIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PyRunPlugIn.m; sourceTree = "<group>"; };
+		5BBC20FE1E79D7580081FB42 /* PyRunSettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PyRunSettings.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 				5B6B42091E79A56E006E4203 /* PyRunPlugIn.h */,
 				5B6B420A1E79A56E006E4203 /* PyRunPlugIn.m */,
 				5B5EF6C71E79A34B000EBDF2 /* Info.plist */,
+				5BBC20FE1E79D7580081FB42 /* PyRunSettings.xib */,
 			);
 			path = PyRun;
 			sourceTree = "<group>";
@@ -126,6 +129,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BBC20FF1E79D7580081FB42 /* PyRunSettings.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +259,7 @@
 				DSTROOT = "$(HOME)/Library/Application Support/Coda/PlugIns";
 				INFOPLIST_FILE = PyRun/Info.plist;
 				INSTALL_PATH = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.micropixels.PyRun;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -272,7 +276,7 @@
 				DSTROOT = "$(HOME)/Library/Application Support/Coda/PlugIns";
 				INFOPLIST_FILE = PyRun/Info.plist;
 				INSTALL_PATH = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.micropixels.PyRun;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
