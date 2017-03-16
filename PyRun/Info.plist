@@ -25,9 +25,11 @@
 	<key>CodaIconMaskTintString</key>
 	<string>#123456</string>
 	<key>CodaPlugInMinimumAPIVersion</key>
-	<integer>7</integer>
+	<string>7</string>
 	<key>CodaPlugInSupportedAPIVersion</key>
 	<integer>7</integer>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.10</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>by Adam Różyński</string>
 	<key>NSPrincipalClass</key>

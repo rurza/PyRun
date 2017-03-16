@@ -7,18 +7,25 @@
 //
 
 #import "PyRunPlugIn.h"
+#import "NTBTask.h"
 
 static NSString *const kPyRunCommandName = @"command";
 
-@interface PyRunPlugIn () <NSWindowDelegate>
-@property (nonatomic, strong) CodaPlugInsController     *plugInsController;
-@property (nonatomic, strong) id<CodaPlugInBundle>      bundle;
-@property (nonatomic, strong) NSTask                    *task;
-@property (nonatomic, strong) NSMenuItem                *runMenuItem;
-@property (nonatomic, strong) NSPanel                   *panel;
-@property (nonatomic, strong) NSString                  *commandDefinedByUser;
-@property (nonatomic, strong) IBOutlet NSTextField      *codeTextField;
+@interface PyRunPlugIn () <NSWindowDelegate, NSTextFieldDelegate>
+@property (nonatomic) CodaPlugInsController     *plugInsController;
+@property (nonatomic) id<CodaPlugInBundle>      bundle;
+@property (nonatomic) NSString                  *commandDefinedByUser;
+@property (nonatomic) BOOL                      windowDisplayed;
+@property (nonatomic) BOOL                      canRun;
 
+@property (nonatomic) NTBTask                   *task;
+@property (nonatomic) NSMutableString           *output;
+
+#pragma mark - GUI
+@property (nonatomic) IBOutlet NSTextField      *codeTextField;
+@property (nonatomic) IBOutlet NSTextView       *consoleOutputTextView;
+@property (nonatomic) NSMenuItem                *runMenuItem;
+@property (nonatomic) NSPanel                   *panel;
 @end
 
 @implementation PyRunPlugIn
@@ -30,6 +37,11 @@ static NSString *const kPyRunCommandName = @"command";
         self.plugInsController = aController;
         self.bundle = plugInBundle;
         [self setupPlugIn];
+        NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+        [nc addObserver:self
+               selector:@selector(appWillTerminate:)
+                   name:NSApplicationWillTerminateNotification
+                 object:nil];
     }
     
     return self;
@@ -45,28 +57,44 @@ static NSString *const kPyRunCommandName = @"command";
 
 - (void)runCode:(NSMenuItem *)sender
 {
-    if (!self.commandDefinedByUser) {
-        [self readJSON];
-        if (!self.commandDefinedByUser) {
-            [self openSettings:nil];
-            return;
-        }
-    }
-    [self terminateTaskIfPossible:nil];
-    
-    NSString *launchPath = @"/bin/sh";
-    NSString *command = [NSString stringWithFormat:@"cd %@; %@", [self escapedSitePath], self.commandDefinedByUser];
-    NSArray *arguments = @[@"-c", command];
-    
-    NSTask *task = [[NSTask alloc] init];
-    task.launchPath = launchPath;
-    task.arguments = arguments;
-    [task launch];
-    self.task = task;
 
-    sender.title = @"Running";
-    self.runMenuItem = sender;
-    [self openWebsiteIfPossible];
+    if (self.canRun) {
+        [self terminateTaskIfPossible:nil];
+        
+        NSString *launchPath = @"/bin/sh";
+        NSString *command = [NSString stringWithFormat:@"cd %@; %@", [self escapedSitePath], self.commandDefinedByUser];
+        NSArray *arguments = @[@"-c", command];
+        
+        NTBTask *task = [[NTBTask alloc] initWithLaunchPath:launchPath];
+        task.arguments = arguments;
+        
+        void (^consoleHandler)(NSString *) = ^(NSString *output) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.output appendFormat:@"\n%@", output];
+                self.consoleOutputTextView.string = self.output;
+                [self.consoleOutputTextView scrollToEndOfDocument:nil];
+            });
+        };
+        
+        task.outputHandler = ^(NSString *output) {
+            consoleHandler(output);
+        };
+        task.errorHandler = ^(NSString *output) {
+            consoleHandler(output);
+        };
+        
+        task.completionHandler = ^(NTBTask *task) {
+            sender.title = @"Run";
+        };
+        
+        [task launch];
+        [self openSettings:nil];
+        
+        self.task = task;
+        
+        sender.title = @"Running";
+        self.runMenuItem = sender;
+    }
 }
 
 - (void)terminateTaskIfPossible:(id)sender
@@ -75,6 +103,7 @@ static NSString *const kPyRunCommandName = @"command";
         [self.task terminate];
         self.task = nil;
         self.runMenuItem.title = @"Run";
+        self.consoleOutputTextView.string = @"";
     }
 }
 
@@ -90,21 +119,31 @@ static NSString *const kPyRunCommandName = @"command";
     }
 }
 
-
+#pragma mark - CodaPlugIn
 - (NSString *)name
 {
     return @"PyRun";
+}
+
+- (void)didLoadSiteNamed:(NSString *)name
+{
+    [self readJSON];
+    self.canRun = YES;
 }
 
 #pragma mark - Window
 - (void)windowWillClose:(NSNotification *)notification
 {
     self.commandDefinedByUser = self.codeTextField.stringValue;
+    self.windowDisplayed = NO;
     [self saveJSON];
 }
 
 - (void)openSettings:(id)sender
 {
+    if (self.windowDisplayed) {
+        return;
+    }
     NSArray *objects;
     [(NSBundle *)self.bundle loadNibNamed:@"PyRunSettings" owner:self topLevelObjects:&objects];
     for (id object in objects) {
@@ -112,10 +151,15 @@ static NSString *const kPyRunCommandName = @"command";
             self.panel = object;
         }
     }
+    self.windowDisplayed = YES;
     self.panel.delegate = self;
-    self.codeTextField.stringValue = self.commandDefinedByUser?: @"";
+    self.codeTextField.stringValue = self.commandDefinedByUser;
     self.codeTextField.placeholderString = [NSString stringWithFormat:@"You're in %@. Type your launch script here, for exmaple: \"source venv/bin/activate; python manage.py\"", [self escapedSitePath]];
-    
+    [self.codeTextField.currentEditor setSelectedRange:NSMakeRange(0, 0)];
+    self.consoleOutputTextView.backgroundColor = [NSColor colorWithWhite:0 alpha:0.8];
+    self.consoleOutputTextView.font = [NSFont fontWithName:@"Menlo" size:14];
+    self.consoleOutputTextView.textColor = [NSColor whiteColor];
+    self.consoleOutputTextView.string = self.output;
 }
 #pragma mark - JSON
 - (void)readJSON
@@ -134,6 +178,7 @@ static NSString *const kPyRunCommandName = @"command";
         }
     }
 }
+
 - (void)saveJSON
 {
     NSString *configurationFilePath = [self configurationFilePath:NO];
@@ -160,6 +205,25 @@ static NSString *const kPyRunCommandName = @"command";
 - (NSString *)configurationFilePath:(BOOL)escaped
 {
     return [NSString stringWithFormat:@"%@/%@.json", escaped ? [self escapedSitePath]:[self.plugInsController siteLocalPath], [self name]];
+}
+
+- (NSMutableString *)output
+{
+    if (!_output) {
+        _output = [[NSMutableString alloc] init];
+    }
+    return _output;
+}
+
+#pragma mark - Notifications
+- (void)appWillTerminate:(NSNotification *)note
+{
+    [self terminateTaskIfPossible:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

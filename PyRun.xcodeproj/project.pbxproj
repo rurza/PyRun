@@ -10,6 +10,7 @@
 		5B5EF6D01E79A45C000EBDF2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B5EF6CF1E79A45C000EBDF2 /* Cocoa.framework */; };
 		5B6B420B1E79A56E006E4203 /* PyRunPlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6B420A1E79A56E006E4203 /* PyRunPlugIn.m */; };
 		5BBC20FF1E79D7580081FB42 /* PyRunSettings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BBC20FE1E79D7580081FB42 /* PyRunSettings.xib */; };
+		5BFCDBD11E7B01000019B40C /* NTBTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFCDBD01E7B01000019B40C /* NTBTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,8 @@
 		5B6B42091E79A56E006E4203 /* PyRunPlugIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PyRunPlugIn.h; sourceTree = "<group>"; };
 		5B6B420A1E79A56E006E4203 /* PyRunPlugIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PyRunPlugIn.m; sourceTree = "<group>"; };
 		5BBC20FE1E79D7580081FB42 /* PyRunSettings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PyRunSettings.xib; sourceTree = "<group>"; };
+		5BFCDBCF1E7B01000019B40C /* NTBTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NTBTask.h; sourceTree = "<group>"; };
+		5BFCDBD01E7B01000019B40C /* NTBTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NTBTask.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +57,8 @@
 		5B5EF6C61E79A34B000EBDF2 /* PyRun */ = {
 			isa = PBXGroup;
 			children = (
+				5BFCDBCF1E7B01000019B40C /* NTBTask.h */,
+				5BFCDBD01E7B01000019B40C /* NTBTask.m */,
 				5B5EF6CD1E79A40C000EBDF2 /* CodaPlugInsController.h */,
 				5B6B42091E79A56E006E4203 /* PyRunPlugIn.h */,
 				5B6B420A1E79A56E006E4203 /* PyRunPlugIn.m */,
@@ -157,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B6B420B1E79A56E006E4203 /* PyRunPlugIn.m in Sources */,
+				5BFCDBD11E7B01000019B40C /* NTBTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
